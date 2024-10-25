@@ -10,8 +10,9 @@ import { Reply, X } from 'lucide-react'
 import PostCardPreview from "@/components/post-card/post-card-preview/page"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { cn } from "@/lib/utils"
-import TextareaAutosize from "react-textarea-autosize"
-import ReplyUtilities from './post-card-reply-utilities/reply-utilities'
+import { useState } from "react";
+import ReplyText from './post-card-reply/post-card-reply-body/reply-text'
+import ReplyUtilities from './post-card-reply/post-card-reply-utilities/reply-utilities'
 
 const Component = ({
   isOpen=false,
@@ -68,7 +69,15 @@ const ReplyCard = ({
 }) => {
   const handleReply = () => {
     console.log("Replying to post");
+    // console.log(text);    // Log the reply text
+    console.log(media); // Log the media
   }
+
+  const [text, setText] = useState("");   // State to manage the reply text
+  const [media, setMedia] = useState([]); // State to manage media uploads
+  const [gifs, setGifs] = useState([]);   // State to manage GIFs
+  const [displayGifs, setDisplayGifs] = useState(false); // State to manage GIF display
+  const [displayPopup, setDisplayPopup] = useState(false); // State to manage popup display
 
   const { pfp, name } = user
   return (
@@ -91,16 +100,20 @@ const ReplyCard = ({
         )}
         placeholder="Reply with ..."
         /> */}
-        <TextareaAutosize
-          className='w-full p-2.5 overflow-hidden overflow-y-hidden overflow-x-hidden resize-none outline-none bg-transparent focus:border focus:rounded-md'
-          minRows={1}
-          maxRows={5}
-          placeholder='Reply with ...'
+        <ReplyText
+          text={text}
+          setText={setText} 
         />
       </CardContent>
       <div className='flex justify-between'>
         <CardFooter className="flex justify-star">
-          <ReplyUtilities />
+          <ReplyUtilities
+            setMedia={setMedia}
+            setGifs={setGifs}
+            displayGifs={displayGifs}
+            setDisplayGifs={setDisplayGifs}
+            setDisplayPopup={setDisplayPopup}
+          />
         </CardFooter>
         <CardFooter className="flex justify-end">
           <Button variant="outline" className="text-black font-bold" size="lg" onClick={handleReply}>Reply</Button>
