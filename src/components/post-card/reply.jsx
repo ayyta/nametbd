@@ -12,6 +12,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { cn } from "@/lib/utils"
 import { useState } from "react";
 import ReplyText from './post-card-reply/post-card-reply-body/reply-text'
+import ReplyMedia from './post-card-reply/post-card-reply-body/reply-media'
 import ReplyUtilities from './post-card-reply/post-card-reply-utilities/reply-utilities'
 
 const Component = ({
@@ -103,6 +104,12 @@ const ReplyCard = ({
         <ReplyText
           text={text}
           setText={setText} 
+        />
+        <ReplyMedia
+          media={media}
+          setMedia={setMedia}
+          gifs={gifs}
+          setGifs={setGifs} 
         />
       </CardContent>
       <div className='flex justify-between'>
