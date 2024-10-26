@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { Button } from './ui/button';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 
 export default function ProfilePopup({user, setUser}) {
@@ -46,37 +47,42 @@ export default function ProfilePopup({user, setUser}) {
   };
 
   return (
-    <div className="rounded-2xl bg-primary w-[430px] h-auto flex flex-col p-2 border-[1px] border-white">
+    <div 
+      className="rounded-2xl bg-primary w-[430px] h-auto flex flex-col p-4 shadow shadow-white"
+      onClick={(e) => e.stopPropagation()}  // Prevent clicks from propagating
+    >
       <div className="flex justify-between">
         <div className="flex items-center">
-          <Image
-            src="/Generic avatar.svg"
-            width={40}
-            height={40}
-            alt="Avatar logo"
-            className="object-cover mr-3"
-          />
-          <div className="flex flex-col">
-            <p>{user.name}</p>
-            <p>@{user.username}</p>
+          <Avatar>
+            <AvatarImage src={user.pfp} alt={user.name} />
+            <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+          </Avatar>
+          <div className="flex flex-col ml-4">
+            <p className="font-light">{user.name}</p>
+            <p className="font-light text-[#909090]">@{user.username}</p>
           </div>
         </div>
         <DotsHorizontalIcon className="w-5 h-5" />
       </div>
       <div className="mt-6 flex flex-col gap-4">
-        <p>{user.bio}</p>
+        <p className="font-light">{user.bio}</p>
         <div className="flex gap-4">
-            <p>{user.following_count} Following</p>
-            <p>{user.follower_count} Followers</p>
+          <p>
+            <span className="font-bold">{user.following_count}</span> <span className="text-[#909090]">Following</span>
+          </p>
+          <p>
+            <span className="font-bold">{user.follower_count}</span> <span className="text-[#909090]">Followers</span>
+          </p>
         </div>
         <Button
-          className={`transition-colors ${user.following ? 'bg-black text-white' : 'hover:bg-black hover:text-white'}`}
+          className={`transition-colors ${user.following ? 'bg-black text-white' : 'hover:bg-black hover:text-white'} mb-2`}
           variant="secondary"
-          onClick={() => handleFollowClick()}
+          onClick={handleFollowClick}
         >
           {getButtonText()}
         </Button>
       </div>
     </div>
   );
+  
 }
