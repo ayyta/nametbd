@@ -17,8 +17,8 @@ export default function ReplyMediaButton(
 
   // Function to handle file upload
   const handleFileUpload = (e) => {
-    const selectedFile = e.target.files; // Get the selected files
-    const selectedFilesArray = Array.from(selectedFile); // Convert to array
+    const selectedFiles = e.target.files; // Get the selected files
+    const selectedFilesArray = Array.from(selectedFiles); // Convert to array
 
     // File size limit is 200MB
     const maxFileSize = 200 * 1024 * 1024; // 200MB
@@ -38,7 +38,9 @@ export default function ReplyMediaButton(
         file : file, // Store the file object
       }));
 
-    setMedia(mediaArray); // Update the media state with the new media array
+    
+    // setMedia(mediaArray); // Update the media state with the new media array
+    setMedia((prevMedia) => [...prevMedia, ...mediaArray]); // Have to move this to the main reply.jsx parent component to avoid multiple alerts
 
     mediaUploadRef.current.value = null; // Reset the input value
 

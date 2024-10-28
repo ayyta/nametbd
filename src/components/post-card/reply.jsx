@@ -10,7 +10,7 @@ import { Reply, X } from 'lucide-react'
 import PostCardPreview from "@/components/post-card/post-card-preview/page"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { cn } from "@/lib/utils"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ReplyText from './post-card-reply/post-card-reply-body/reply-text'
 import ReplyMedia from './post-card-reply/post-card-reply-body/reply-media'
 import ReplyUtilities from './post-card-reply/post-card-reply-utilities/reply-utilities'
@@ -79,6 +79,10 @@ const ReplyCard = ({
   const [gifs, setGifs] = useState([]);   // State to manage GIFs
   const [displayGifs, setDisplayGifs] = useState(false); // State to manage GIF display
   const [displayPopup, setDisplayPopup] = useState(false); // State to manage popup display
+
+  useEffect(() => {
+    console.log("Media useEffect: ", media);
+  }, [media]);
 
   const { pfp, name } = user
   return (
