@@ -39,8 +39,8 @@ export default function ReplyMediaButton(
       }));
 
     
-    // setMedia(mediaArray); // Update the media state with the new media array
-    setMedia((prevMedia) => [...prevMedia, ...mediaArray]); // Have to move this to the main reply.jsx parent component to avoid multiple alerts
+    setMedia(mediaArray); // Update the media state with the new media array
+    // setMedia((prevMedia) => [...prevMedia, ...mediaArray]); // Have to move this to the main reply.jsx parent component to avoid multiple alerts
 
     mediaUploadRef.current.value = null; // Reset the input value
 

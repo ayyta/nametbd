@@ -2,16 +2,18 @@ import Image from "next/image";
 
 export default function ReplyGifButton(
   { 
-    setGifs,
+    displayGifs,
     setDisplayGifs,
     setDisplayPopup,
+    // closeReply,
   }
 ) 
 
 {
   const handleGifClick = () => {
-    setDisplayGifs(!setGifs);
+    setDisplayGifs(!displayGifs);
     setDisplayPopup(true);
+    // closeReply();
   }
 
   return (

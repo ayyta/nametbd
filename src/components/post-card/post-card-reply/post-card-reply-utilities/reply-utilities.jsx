@@ -5,15 +5,14 @@ import ReplyGifButton from "./reply-gif-button";
 export default function ReplyUtilities(
   {
     setMedia,
-    setGifs,
     displayGifs,
     setDisplayGifs,
     setDisplayPopup,
+    // closeReply,
   }
 )
 
 {
-
   return (
     <>
       <ReplyMediaButton 
@@ -28,10 +27,10 @@ export default function ReplyUtilities(
         />
       </button>
       <ReplyGifButton 
-        setGifs={setGifs}
         displayGifs={displayGifs}
         setDisplayGifs={setDisplayGifs}
         setDisplayPopup={setDisplayPopup}
+        // closeReply={closeReply}
       />
     </>
   );

@@ -1,5 +1,3 @@
-"use client";
-
 import { 
   Carousel, 
   CarouselContent, 
@@ -13,8 +11,6 @@ export default function ReplyMedia(
   {
     media,
     setMedia,
-    gifs,
-    setGifs,
   }
 ) 
 

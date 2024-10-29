@@ -14,6 +14,7 @@ import { useEffect, useState } from "react";
 import ReplyText from './post-card-reply/post-card-reply-body/reply-text'
 import ReplyMedia from './post-card-reply/post-card-reply-body/reply-media'
 import ReplyUtilities from './post-card-reply/post-card-reply-utilities/reply-utilities'
+import ReplyGifPopup from './post-card-reply/post-card-reply-body/reply-gif-popup'
 
 const Component = ({
   isOpen=false,
@@ -63,6 +64,7 @@ const Component = ({
 }
 
 const ReplyCard = ({
+  // closeReply = () => {},
   user={
     pfp: "/placeholder-avatar.jpg",
     name: "John Doe",
@@ -71,7 +73,7 @@ const ReplyCard = ({
   const handleReply = () => {
     console.log("Replying to post");
     // console.log(text);    // Log the reply text
-    console.log(media); // Log the media
+    // console.log(media); // Log the media
   }
 
   const [text, setText] = useState("");   // State to manage the reply text
@@ -80,57 +82,77 @@ const ReplyCard = ({
   const [displayGifs, setDisplayGifs] = useState(false); // State to manage GIF display
   const [displayPopup, setDisplayPopup] = useState(false); // State to manage popup display
 
-  useEffect(() => {
-    console.log("Media useEffect: ", media);
-  }, [media]);
+  // useEffect(() => {
+  //   console.log("Media useEffect: ", media);
+  // }, [media]);
+
+  const handleAddMedia = (newMediaArray) => {
+    // Check if the total media count exceeds 4
+    if (media.length + newMediaArray.length > 4) {
+      alert("You can only upload up to 4 media files.");
+      return;
+    }
+
+    // Upload the media state
+    setMedia((prevMedia) => [...prevMedia, ...newMediaArray]);
+  }
 
   const { pfp, name } = user
   return (
-    <Card className="w-192 h-fit bg-transparent border-none text-white">
-      <CardHeader className="flex flex-row items-center gap-4 py-2">
-        <Avatar>
-          <AvatarImage src={pfp} alt={name} />
-          <AvatarFallback>{name.charAt(0)}</AvatarFallback>
-        </Avatar>
-        <div className="flex flex-col">
-          <p className="text-lg font-semibold">{name}</p>
-        </div>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        {/* <Input className={cn(
-          "border-input",
-          "focus:ring-0 focus:ring-offset-0 focus:border-input focus-visible:ring-0 focus-visible:ring-offset-0",
-          "focus-visible:border-input",
-          "border-0"
-        )}
-        placeholder="Reply with ..."
-        /> */}
-        <ReplyText
-          text={text}
-          setText={setText} 
-        />
-        <ReplyMedia
-          media={media}
-          setMedia={setMedia}
+    <>
+      <Card className="w-192 h-fit bg-transparent border-none text-white">
+        <ReplyGifPopup
           gifs={gifs}
-          setGifs={setGifs} 
+          setGifs={setGifs}
+          displayGifs={displayGifs}
+          setDisplayGifs={setDisplayGifs} 
+          displayPopup={displayPopup}
+          setDisplayPopup={setDisplayPopup}
+          setMedia={handleAddMedia}
         />
-      </CardContent>
-      <div className='flex justify-between'>
-        <CardFooter className="flex justify-star">
-          <ReplyUtilities
-            setMedia={setMedia}
-            setGifs={setGifs}
-            displayGifs={displayGifs}
-            setDisplayGifs={setDisplayGifs}
-            setDisplayPopup={setDisplayPopup}
+        <CardHeader className="flex flex-row items-center gap-4 py-2">
+          <Avatar>
+            <AvatarImage src={pfp} alt={name} />
+            <AvatarFallback>{name.charAt(0)}</AvatarFallback>
+          </Avatar>
+          <div className="flex flex-col">
+            <p className="text-lg font-semibold">{name}</p>
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {/* <Input className={cn(
+            "border-input",
+            "focus:ring-0 focus:ring-offset-0 focus:border-input focus-visible:ring-0 focus-visible:ring-offset-0",
+            "focus-visible:border-input",
+            "border-0"
+          )}
+          placeholder="Reply with ..."
+          /> */}
+          <ReplyText
+            text={text}
+            setText={setText} 
           />
-        </CardFooter>
-        <CardFooter className="flex justify-end">
-          <Button variant="outline" className="text-black font-bold" size="lg" onClick={handleReply}>Reply</Button>
-        </CardFooter>
-      </div>
-    </Card>
+          <ReplyMedia
+            media={media}
+            setMedia={setMedia}
+          />
+        </CardContent>
+        <div className='flex justify-between'>
+          <CardFooter className="flex justify-star">
+            <ReplyUtilities
+              setMedia={handleAddMedia}
+              displayGifs={displayGifs}
+              setDisplayGifs={setDisplayGifs}
+              setDisplayPopup={setDisplayPopup}
+              // closeReply={closeReply}
+            />
+          </CardFooter>
+          <CardFooter className="flex justify-end">
+            <Button variant="outline" className="text-black font-bold" size="lg" onClick={handleReply}>Reply</Button>
+          </CardFooter>
+        </div>
+      </Card>
+    </>
   )
 }
 
