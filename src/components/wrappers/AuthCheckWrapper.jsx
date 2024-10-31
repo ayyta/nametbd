@@ -19,22 +19,22 @@ export default function AuthCheckWrapper({ children }) {
       const {
         data: { session },
       } = await supabaseAnon.auth.getSession();
-
+      console.log('pathname', pathname)
       // Skip redirect if user is on login or register page
       if (!session && (pathname !== '/login' || pathname !== '/register')) {
-        router.push('/login');
         setLoading(false);
+        router.push('/login');
       } else if (
         session &&
         (pathname === '/login' || pathname === '/register')
       ) {
-        router.push('/home');
         setLoading(true);
+        router.push('/home');
       } else {
+        setLoading(false);
         const fetchedUserProfile = await fetchUserProfile(session.user.id);
         const updatedUser = { ...session.user, ...fetchedUserProfile };
         setUser(updatedUser);
-        setLoading(false);
       }
     };
 

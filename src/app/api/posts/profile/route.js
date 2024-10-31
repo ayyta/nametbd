@@ -16,6 +16,7 @@ export async function GET(req, res) {
       .from("post")
       .select("*")
       .eq("user_id", currentUserId)
+      .order("created_at", { ascending: false })
       .limit(10);
 
     posts.forEach(post => {
