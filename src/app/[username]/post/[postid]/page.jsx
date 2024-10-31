@@ -1,31 +1,25 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import Header from "@/app/[username]/post/[postid]/header";
 import PostCardPreview from "@/components/post-card/post-card-preview/page";
 import SortByDropDown from "@/app/[username]/post/[postid]/sort-by-dropdown";
 import Loading from "@/components/Loading";
-
+import { fetchPostData, fetchReplyData } from "@/lib/fetchPostData";
 const Component = ({  
   params,
-  postId=params.postid,
-  userId=null,
-  pfp = "",
-  name = "",
-  username = params.username,
-  creationDate = "",
-  textContent = "",
-  imagesProp = ["/massageServices.jpg", "/haircut2.jpg", "/massageServices.jpg", "/haircut2.jpg"],
-  likeCount = 0,
-  commentCount = 0,
-  shareCount = 0,
 }) => {
   // post table: post_id, created_at, user_id, like_count, comment_count, share_count, text_content
   // user_table: name, email, username, pfp, profile_background, bio
   // backend: given pfp media_id from user_table, get media_url from media_table
   // match media id with post_id in media_post table to get all media urls for post
+  const searchParams = useSearchParams()
+  const router = useRouter();
+
+  const [selectedSort, setSelectedSort] = useState({ label: "Relevance", value: "relevance" });
+  const [post, setPost] = useState({});
 
   const sortOptions = [
     { label: "Relevance", value: "relevance" },
@@ -33,11 +27,15 @@ const Component = ({
     { label: "Most Liked", value: "most_liked" },
   ]
 
-  const router = useRouter();
   
-  const [selectedSort, setSelectedSort] = useState(sortOptions[0]);
 
-
+  useEffect(() => {
+    const fetchData = async () => {
+      const postData = await fetchPostData(params.postid, searchParams)
+      setPost(postData);
+    }
+    fetchData();
+  }, []);
   // Dropdown menu, change replies based on selected sort
   useEffect(() => {
     console.log("Selected sort: ", selectedSort);
@@ -49,20 +47,22 @@ const Component = ({
         <Header router={router} title={"Note"}/>
 
         {/* Content */}
-        <PostCardPreview 
-          postId={postId} 
-          userId={userId}
-          username={username}
-          creationDate={creationDate}
-          pfp={pfp}
-          name={name}
-          textContent={textContent}
-          imagesProp={imagesProp} 
-          likeCount={likeCount}
-          commentCount={commentCount}
-          shareCount={shareCount}
-          isCurrentPost={true}
-        />
+        {post && post.userId &&
+          <PostCardPreview 
+            postId={post.postId} 
+            userId={post.userId}
+            username={post.username}
+            creationDate={post.creationDate}
+            pfp={post.pfp}
+            name={post.name}
+            textContent={post.textContent}
+            imagesProp={post.imagesProp} 
+            likeCount={post.likeCount}
+            commentCount={post.commentCount}
+            shareCount={post.shareCount}
+            isCurrentPost={true}
+          />
+        }
         <div className="w-full flex flex-row items-center justify-between p-4 border-y border-white/50">
           <p className="text-white font-bold text-lg ">Replies</p>
           <SortByDropDown 
@@ -72,11 +72,11 @@ const Component = ({
           />
         </div>
 
-        <Replies 
-          postId={postId} 
+        {false && <Replies 
+          postId={post.postId} 
           selectedSort={selectedSort}
           router={router}
-        />
+        />}
 
       </div>
 
@@ -212,5 +212,6 @@ const Replies = ({
     </>
   )
 }
+
 
 export default Component;

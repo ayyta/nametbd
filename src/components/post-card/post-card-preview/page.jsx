@@ -10,7 +10,7 @@ import PostCardPreviewHeader from "@/components/post-card/post-card-preview/head
 import PostCardPreviewFooter from "@/components/post-card/post-card-preview/footer";
 import PostCardCarousel from "@/components/post-card/post-card-carousel";
 import ReplyPopup from "@/components/post-card/reply";
-import supabaseAnon from "@/lib/supabaseAnonClient";
+import { set } from "date-fns";
 
 export default function Component({
   postId=null,
@@ -42,20 +42,11 @@ export default function Component({
     following: false, 
     friends: false
   });
-  const [post, setPost] = useState({
-    textContent: textContent,
-    images: imagesProp,
-    likeCount: likeCount,
-    commentCount: commentCount,
-    shareCount: shareCount,
-  });
-
+  const [post, setPost] = useState("");
   const router = useRouter();
-
   const openCarousel = () => setIsCarouselOpen(true);
   const closeCarousel = () => setIsCarouselOpen(false);
   const openReply = () => setIsReplyOpen(true);
-
   useEffect(() => {
     if (!isLoaded) {
       // name, username, creationDate, textContent, imagesProp, likeCount, commentCount, shareCount
@@ -75,16 +66,22 @@ export default function Component({
         following: false, 
         friends: false
       });
-    }
-    
-  }, [])
+      setPost({
+        textContent: textContent,
+        images: imagesProp,
+        likeCount: likeCount,
+        commentCount: commentCount,
+        shareCount: shareCount,
+      });
 
+    }
+
+  }, [])
   const renderImages = () => (
     post.images.length > 0 && (
       <div className={`grid gap-0.5 ${post.images.length > 1 ? 'grid-cols-2' : 'grid-cols-1'} rounded-2xl border border-white/30 overflow-hidden cursor-pointer active:scale-95 transition-all duration-150 ease-in-out w-fit`}>
-        {post.images.map((src, index) => {
+        {post.images && post.images.map((src, index) => {
           const isVideo = src.includes(".mp4") || src.includes(".mov");
-
           return (
             <div 
               className={`relative w-fit flex`} 
@@ -123,7 +120,19 @@ export default function Component({
     if (isCurrentPost) return;
     console.log("Redirecting to post page");
     if (postId && username) {
-      router.push(`${username}/post/${postId}`);
+      const searchParams = new URLSearchParams({ 
+        userId: userId,
+        pfp: user.pfp,
+        name: user.name,
+        username: user.username,
+        creationDate: creationDate,
+        textContent: post.textContent,
+        imagesProp: JSON.stringify(post.images),
+        likeCount: post.likeCount,
+        commentCount: post.commentCount,
+        shareCount: post.shareCount,
+      });
+      router.push(`${username}/post/${postId}?${searchParams.toString()}`);
     } else {
       console.error("Post ID or username not provided");
     }
@@ -150,7 +159,7 @@ export default function Component({
           <div className="">
             <CardContent className="space-y-4">
               <p>{textContent}</p>
-              {renderImages()}
+              {post.images && renderImages()}
             </CardContent>
             <PostCardPreviewFooter
               hasButtons={hasButtons}
