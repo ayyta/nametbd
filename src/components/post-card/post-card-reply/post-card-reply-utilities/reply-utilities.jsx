@@ -8,7 +8,6 @@ export default function ReplyUtilities(
     displayGifs,
     setDisplayGifs,
     setDisplayPopup,
-    // closeReply,
   }
 )
 
@@ -30,7 +29,6 @@ export default function ReplyUtilities(
         displayGifs={displayGifs}
         setDisplayGifs={setDisplayGifs}
         setDisplayPopup={setDisplayPopup}
-        // closeReply={closeReply}
       />
     </>
   );

@@ -4,13 +4,11 @@ import {
   CardContent,
   CardFooter,
 } from '@/components/ui/card'
-import { Input } from "@/components/ui/input"
 import { Button } from '@/components/ui/button'
-import { Reply, X } from 'lucide-react'
+import { X } from 'lucide-react'
 import PostCardPreview from "@/components/post-card/post-card-preview/page"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { cn } from "@/lib/utils"
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import ReplyText from './post-card-reply/post-card-reply-body/reply-text'
 import ReplyMedia from './post-card-reply/post-card-reply-body/reply-media'
 import ReplyUtilities from './post-card-reply/post-card-reply-utilities/reply-utilities'
@@ -82,10 +80,6 @@ const ReplyCard = ({
   const [displayGifs, setDisplayGifs] = useState(false); // State to manage GIF display
   const [displayPopup, setDisplayPopup] = useState(false); // State to manage popup display
 
-  // useEffect(() => {
-  //   console.log("Media useEffect: ", media);
-  // }, [media]);
-
   const handleAddMedia = (newMediaArray) => {
     // Check if the total media count exceeds 4
     if (media.length + newMediaArray.length > 4) {
@@ -120,14 +114,6 @@ const ReplyCard = ({
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
-          {/* <Input className={cn(
-            "border-input",
-            "focus:ring-0 focus:ring-offset-0 focus:border-input focus-visible:ring-0 focus-visible:ring-offset-0",
-            "focus-visible:border-input",
-            "border-0"
-          )}
-          placeholder="Reply with ..."
-          /> */}
           <ReplyText
             text={text}
             setText={setText} 
@@ -144,7 +130,6 @@ const ReplyCard = ({
               displayGifs={displayGifs}
               setDisplayGifs={setDisplayGifs}
               setDisplayPopup={setDisplayPopup}
-              // closeReply={closeReply}
             />
           </CardFooter>
           <CardFooter className="flex justify-end">

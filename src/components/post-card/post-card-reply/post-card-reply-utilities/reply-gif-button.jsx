@@ -5,7 +5,6 @@ export default function ReplyGifButton(
     displayGifs,
     setDisplayGifs,
     setDisplayPopup,
-    // closeReply,
   }
 ) 
 
@@ -13,7 +12,6 @@ export default function ReplyGifButton(
   const handleGifClick = () => {
     setDisplayGifs(!displayGifs);
     setDisplayPopup(true);
-    // closeReply();
   }
 
   return (
