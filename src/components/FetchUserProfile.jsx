@@ -27,7 +27,6 @@ export async function fetchUserProfile(userId) {
     };
 
   } catch (error) {
-    console.log("ERERRROR IN FETHC UER PROFILE")
     console.error(error.message);
   }
 }

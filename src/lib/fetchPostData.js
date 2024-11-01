@@ -6,6 +6,7 @@ const fetchPostData = async (postId, searchParams) => {
   let postData;
   if (searchParams.get("userId") === null) {
     // fetch data
+    
   } else {
     postData = {
       postId: postId,

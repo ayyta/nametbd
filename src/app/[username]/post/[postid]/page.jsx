@@ -72,7 +72,7 @@ const Component = ({
           />
         </div>
 
-        {false && <Replies 
+        {<Replies 
           postId={post.postId} 
           selectedSort={selectedSort}
           router={router}
@@ -99,8 +99,8 @@ const Replies = ({
         postId: 1,
         userId: "122",
         pfp: "/placeholder-avatar.jpg",
-        name: "John Doe",
-        username: "johndoe",
+        name: "1",
+        username: "1",
         creationDate : "2h ago",
         content : "This is a sample post content. It can be much longer and will wrap to multiple lines if needed. ",
         imagesProp : [],
@@ -111,8 +111,8 @@ const Replies = ({
           postId: 2,
           userId: "123",
           pfp: "/placeholder-avatar.jpg",
-          name: "John Doe",
-          username: "johndoe",
+          name: "2",
+          username: "2",
           creationDate : "2h ago",
           content : "This is a sample post content. second post ",
           imagesProp : ["/massageServices.jpg", "/haircut2.jpg"],
@@ -123,8 +123,8 @@ const Replies = ({
           postId: 3,
           userId: "123",
           pfp: "/placeholder-avatar.jpg",
-          name: "John Doe",
-          username: "johndoe",
+          name: "3",
+          username: "3",
           creationDate : "2h ago",
           content : "This is a sample post content. second post ",
           imagesProp : ["/massageServices.jpg"],

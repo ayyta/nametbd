@@ -118,7 +118,7 @@ export default function Component({
 
   const handleRedirect = () => {
     if (isCurrentPost) return;
-    console.log("Redirecting to post page");
+
     if (postId && username) {
       const searchParams = new URLSearchParams({ 
         userId: userId,
@@ -132,7 +132,7 @@ export default function Component({
         commentCount: post.commentCount,
         shareCount: post.shareCount,
       });
-      router.push(`${username}/post/${postId}?${searchParams.toString()}`);
+      router.push(`/${username}/post/${postId}?${searchParams.toString()}`);
     } else {
       console.error("Post ID or username not provided");
     }
