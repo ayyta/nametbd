@@ -1,8 +1,13 @@
 import supabaseService from "@/lib/supabaseServiceClient";
+import { formatCreatedAt, fetchMediaForPosts } from "@/lib/parsePost";
+import { fetchUserProfile } from "@/components/FetchUserProfile";
 import { NextResponse } from "next/server";
-export async function GET(req, res) {
 
+export async function GET(req, res) {
   try {
+    const { searchParams } = new URL(req.url);
+    const currentPostId = searchParams.get("postId");
+
     const { data: posts, error } = await supabaseService
       .from("post")
       .select("*")
@@ -11,38 +16,23 @@ export async function GET(req, res) {
     if (error) {
       throw new Error(error.message);
     }
-    return NextResponse.json({ posts });
+
+    let postsList = posts
+
+    // Given post, format created_at field
+    postsList = formatCreatedAt(posts);
+
+    // Fetch the media for each post
+    postsList = await fetchMediaForPosts(postsList);
+
+    return NextResponse.json({ posts: postsList[0] }, { status: 200 });
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
 
 
-// Given post, format created_at field
-function formatCreatedAt(posts) {
-  posts.forEach(post => {
-    const postDate = new Date(post.created_at);
-    const now = new Date();
-    
-    const diffHours = (now - postDate) / (1000 * 60 * 60); // Difference in hours
-  
-    if (diffHours < 24) {
-      // If it's less than 24 hours, display like "3 hrs ago"
-      if (diffHours >= 1) {
-        // If more than 1 hour, display in hours
-        post.created_at = `${Math.round(diffHours)} hrs`;
-      } else {
-        // If less than 1 hour, display in minutes
-        const diffMinutes = differenceInMinutes(now, postDate);
-        post.created_at = `${Math.round(diffMinutes)} min${diffMinutes > 1 ? 's' : ''}`;
-      }
-    } else {
-      // If it's more than 24 hours, display the formatted date like "Oct 16, 07:04 AM"
-      post.created_at = format(postDate, 'MMM d'); // e.g., "Oct 16, 07:04 AM"
-    }
-  });
-  return posts;
-}
+
 
 // when you reply
 // create a new post row with reply content

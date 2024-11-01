@@ -1,5 +1,6 @@
 import { format } from 'date-fns';
 import supabaseService from './supabaseServiceClient';
+import { fetchUserProfile } from '@/components/FetchUserProfile';
 // Given post, format created_at field
 function formatCreatedAt(posts) {
   posts.forEach(post => {
@@ -60,7 +61,9 @@ async function fetchMediaForPosts(posts) {
       }
       post.mediaList = mediaLinks;
     }
+    return posts;
 }
+
 
 const differenceInMinutes = (date1, date2) => {
   // Convert both dates to milliseconds
