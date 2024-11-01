@@ -10,6 +10,7 @@ import PostCardPreviewHeader from "@/components/post-card/post-card-preview/head
 import PostCardPreviewFooter from "@/components/post-card/post-card-preview/footer";
 import PostCardCarousel from "@/components/post-card/post-card-carousel";
 import ReplyPopup from "@/components/post-card/reply";
+import { useAuth } from '@/components/wrappers/AuthCheckWrapper';
 import { set } from "date-fns";
 
 export default function Component({
@@ -29,6 +30,7 @@ export default function Component({
   isCurrentPost = false,
   isLoaded = name && username && creationDate,
 }) {
+  
   const [isCarouselOpen, setIsCarouselOpen] = useState(false);
   const [isReplyOpen, setIsReplyOpen] = useState(false);
   const [user, setUser] = useState({
@@ -42,12 +44,25 @@ export default function Component({
     following: false, 
     friends: false
   });
+  const [replier, setReplier] = useState({});
   const [post, setPost] = useState("");
   const router = useRouter();
   const openCarousel = () => setIsCarouselOpen(true);
   const closeCarousel = () => setIsCarouselOpen(false);
   const openReply = () => setIsReplyOpen(true);
+
+  const fetchReplier = () => {
+    let { user } = useAuth();
+    return {
+      pfp: user.pfpLink,
+      name: user.userProfile.name,
+      username: user.userProfile.username,
+    };
+  }
+  const replierData = fetchReplier();
+
   useEffect(() => {
+
     if (!isLoaded) {
       // name, username, creationDate, textContent, imagesProp, likeCount, commentCount, shareCount
       // fetch all of user
@@ -67,13 +82,15 @@ export default function Component({
         friends: false
       });
       setPost({
+        postId: postId,
+        creationDate: creationDate,
         textContent: textContent,
         images: imagesProp,
         likeCount: likeCount,
         commentCount: commentCount,
         shareCount: shareCount,
       });
-
+      setReplier(replierData);
     }
 
   }, [])
@@ -148,7 +165,7 @@ export default function Component({
           pfp={pfp}
           name={name}
           username={username}
-          creationDate={creationDate}
+          creationDate={post.creationDate}
           user={user}
         />
         <div className="flex">
@@ -178,7 +195,14 @@ export default function Component({
         isCarouselOpen={isCarouselOpen} 
         closeCarousel={closeCarousel}
       />
-      <ReplyPopup isOpen={isReplyOpen} setIsOpen={setIsReplyOpen} />
+      <ReplyPopup 
+        user={user} 
+        replier={replier} 
+        isOpen={isReplyOpen} 
+        setIsOpen={setIsReplyOpen} 
+        postData={post}
+        
+        />
     </>
 
   )

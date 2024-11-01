@@ -24,6 +24,8 @@ const Component = ({
     pfp: "/placeholder-avatar.jpg",
     name: "John Doe",
   },
+  postData={}
+
 }) => {
   const { pfp, name, username } = user
   const closeReply = () => {
@@ -49,6 +51,9 @@ const Component = ({
           <PostCardPreview 
             pfp={pfp}
             name={name}
+            creationDate={postData.creationDate}
+            imagesProp={postData.images}
+            textContent={postData.textContent}
             username={username}
             hasButtons={false}
             hasReplies={true}

@@ -1,6 +1,5 @@
 import supabaseService from "@/lib/supabaseServiceClient";
 import { formatCreatedAt, fetchMediaForPosts } from "@/lib/parsePost";
-import { fetchUserProfile } from "@/components/FetchUserProfile";
 import { NextResponse } from "next/server";
 
 export async function GET(req, res) {
