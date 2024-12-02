@@ -59,7 +59,7 @@ const Component = ({
             hasButtons={false}
             hasReplies={true}
           />
-          <ReplyCard user={replier} />
+          <ReplyCard postId={postData.postId} replier={replier} />
         </CardContent>
       </Card>
     </div>
@@ -68,15 +68,24 @@ const Component = ({
 
 const ReplyCard = ({
   // closeReply = () => {},
-  user={
+  postId="",
+  replier={
     pfp: "/placeholder-avatar.jpg",
     name: "John Doe",
-  },
+  }
 }) => {
+  console.log("Post ID:", postId);
   const handleReply = () => {
-    console.log("Replying to post");
-    // console.log(text);    // Log the reply text
-    // console.log(media); // Log the media
+    if (postId === "") {
+      console.error("Post ID is empty. Refresh the page and try again.");
+      return;
+    }
+
+    console.log("Replying to post...");
+    console.log("replier:", replier);
+    console.log("text:", text);
+    console.log("media:", media);
+    console.log("gifs:", gifs);
   }
 
   const [text, setText] = useState("");   // State to manage the reply text
@@ -96,7 +105,7 @@ const ReplyCard = ({
     setMedia((prevMedia) => [...prevMedia, ...newMediaArray]);
   }
 
-  const { pfp, name } = user
+  const { pfp, name } = replier
   return (
     <>
       <Card className="w-192 h-fit bg-transparent border-none text-white">

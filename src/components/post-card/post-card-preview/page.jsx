@@ -2,7 +2,7 @@
 "use client"
 
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
@@ -11,7 +11,6 @@ import PostCardPreviewFooter from "@/components/post-card/post-card-preview/foot
 import PostCardCarousel from "@/components/post-card/post-card-carousel";
 import ReplyPopup from "@/components/post-card/reply";
 import { useAuth } from '@/components/wrappers/AuthCheckWrapper';
-import { set } from "date-fns";
 
 export default function Component({
   postId=null,
@@ -47,12 +46,24 @@ export default function Component({
   const [replier, setReplier] = useState({});
   const [post, setPost] = useState("");
   const router = useRouter();
+  const pathname = usePathname(); 
+  const searchParams = useSearchParams();
   const openCarousel = () => setIsCarouselOpen(true);
   const closeCarousel = () => setIsCarouselOpen(false);
   const openReply = () => setIsReplyOpen(true);
 
+  // Get replier data
   const fetchReplier = () => {
     let { user } = useAuth();
+
+    // If no user data refresh page automatically to fetch user data
+    if (!user) {
+      if (searchParams.size !== 0) {
+        router.push(pathname);
+      }
+      return null;
+    }
+
     return {
       pfp: user.pfpLink,
       name: user.userProfile.name,
