@@ -28,6 +28,8 @@ const Component = ({
   postData={}
 
 }) => {
+  // console.log("user in rpely.jsx",user)
+  // console.log("replier in rpely.jsx",replier)
   const { pfp, name, username } = user
   const closeReply = () => {
     setIsOpen(false)

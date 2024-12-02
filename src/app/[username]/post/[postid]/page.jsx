@@ -32,7 +32,6 @@ const Component = ({
   useEffect(() => {
     const fetchData = async () => {
       const postData = await fetchPostData(params.postid, searchParams)
-      console.log("postData", postData) 
       setPost(postData);
     }
     fetchData();

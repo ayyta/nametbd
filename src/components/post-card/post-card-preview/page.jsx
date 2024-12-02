@@ -11,6 +11,7 @@ import PostCardPreviewFooter from "@/components/post-card/post-card-preview/foot
 import PostCardCarousel from "@/components/post-card/post-card-carousel";
 import ReplyPopup from "@/components/post-card/reply";
 import { useAuth } from '@/components/wrappers/AuthCheckWrapper';
+import { set } from "date-fns";
 
 export default function Component({
   postId=null,
@@ -45,34 +46,28 @@ export default function Component({
   });
   const [replier, setReplier] = useState({});
   const [post, setPost] = useState("");
+  const replierData = useAuth();
   const router = useRouter();
-  const pathname = usePathname(); 
+  const pathname = usePathname()
   const searchParams = useSearchParams();
+
   const openCarousel = () => setIsCarouselOpen(true);
   const closeCarousel = () => setIsCarouselOpen(false);
   const openReply = () => setIsReplyOpen(true);
-
-  // Get replier data
-  const fetchReplier = () => {
-    let { user } = useAuth();
-
-    // If no user data refresh page automatically to fetch user data
-    if (!user) {
-      if (searchParams.size !== 0) {
-        router.push(pathname);
-      }
-      return null;
-    }
-
-    return {
-      pfp: user.pfpLink,
-      name: user.userProfile.name,
-      username: user.userProfile.username,
-    };
-  }
-  const replierData = fetchReplier();
-
+  
+  // Push to path without queries if user isn't loaded
   useEffect(() => {
+    if (!replierData.user && searchParams.size !== 0) {
+      router.push(pathname);
+      return;
+    }
+  }, [user, searchParams]);
+
+  // Set data
+  useEffect(() => {
+    if (!replierData.user) {
+      return;
+    }
 
     if (!isLoaded) {
       // name, username, creationDate, textContent, imagesProp, likeCount, commentCount, shareCount
@@ -101,10 +96,15 @@ export default function Component({
         commentCount: commentCount,
         shareCount: shareCount,
       });
-      setReplier(replierData);
+      setReplier({
+        id: replierData.user.id,
+        pfp: replierData.user.pfpLink,
+        name: replierData.user.userProfile.name,
+        username: replierData.user.userProfile.username,
+      });
     }
+  }, [isLoaded, replierData])
 
-  }, [])
   const renderImages = () => (
     post.images.length > 0 && (
       <div className={`grid gap-0.5 ${post.images.length > 1 ? 'grid-cols-2' : 'grid-cols-1'} rounded-2xl border border-white/30 overflow-hidden cursor-pointer active:scale-95 transition-all duration-150 ease-in-out w-fit`}>
