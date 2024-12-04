@@ -20,11 +20,17 @@ const PostCardPreviewFooter = ({
   const [postLink, setPostLink] = useState("")
   const [isLiked, setIsLiked] = useState(false)
   const pathname = usePathname()
+  const [isLiked, setIsLiked] = useState(false)
+  const pathname = usePathname()
   const { toast } = useToast()
 
   useEffect(() => {
     // set postlink
     // fetch photos
+    setPostLink(window.location.origin + pathname)
+
+    // fetch like status
+
     setPostLink(window.location.origin + pathname)
 
     // fetch like status
@@ -43,7 +49,6 @@ const PostCardPreviewFooter = ({
     try {
       const urlParam = new URLSearchParams({ postId, isActive, userId });
       const query = urlParam.toString()
-      console.log("postId", postId)
       const response = await fetch(`/api/posts/${postId}/likes?${query}`, {
         method: "POST", 
       });
