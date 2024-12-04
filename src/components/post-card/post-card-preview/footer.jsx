@@ -20,8 +20,6 @@ const PostCardPreviewFooter = ({
   const [postLink, setPostLink] = useState("")
   const [isLiked, setIsLiked] = useState(false)
   const pathname = usePathname()
-  const [isLiked, setIsLiked] = useState(false)
-  const pathname = usePathname()
   const { toast } = useToast()
 
   useEffect(() => {
