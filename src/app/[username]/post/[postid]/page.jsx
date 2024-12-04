@@ -27,8 +27,6 @@ const Component = ({
     { label: "Most Liked", value: "most_liked" },
   ]
 
-  
-
   useEffect(() => {
     const fetchData = async () => {
       const postData = await fetchPostData(params.postid, searchParams)
