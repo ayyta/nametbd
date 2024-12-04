@@ -1,6 +1,44 @@
 import { NextResponse } from "next/server";
 import supabaseService from "@/lib/supabaseServiceClient";
 
+export async function GET(req, res) {
+  try {
+    const { searchParams } = new URL(req.url);
+    const postId = searchParams.get("postId");
+    const userId = searchParams.get("userId");
+
+    if (!postId || !userId) {
+      throw new Error("postId or userId is null or undefined");
+    }
+
+    // Fetch like status
+    const { data: likeData, error: likeError } = await supabaseService
+      .from("likes")
+      .select("post_id, user_id")
+      .eq("post_id", postId)
+      .eq("user_id", userId)
+      .single(); // Ensures only one result is returned
+
+    const isLiked = likeData ? true : false;
+
+    const { data: postLikeCount, error: fetchError } = await supabaseService
+      .from("post")
+      .select("like_count")
+      .eq("post_id", postId)
+      .single(); // Ensures only one result is returned
+
+    if (fetchError) {
+      console.error("Error fetching like count:", fetchError, postLikeCount);
+      throw new Error("Failed to fetch like count");
+    }
+    const likeCount = postLikeCount?.like_count || 0;
+    return NextResponse.json({ isLiked, likeCount }, { status: 200 });
+  } catch (error) {
+    console.error("Failed to fetch like status in api", error);
+    return NextResponse.json({ error: error.message }, { status: 400 });
+  }
+}
+
 export async function POST(req, res) {
   console.log("POST request to /api/posts/[postId]/likes");
   try {
@@ -82,3 +120,5 @@ const handleLikeUpdate = async (postId, isLiked) => {
     throw new Error("Failed to update like count");
   }
 };
+
+

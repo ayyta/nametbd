@@ -1,4 +1,4 @@
-import React, { useState, forwardRef } from "react"
+import React, { useState, forwardRef, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 
 const PostCardActionButton = forwardRef(function PostCardActionButton({
@@ -100,21 +100,18 @@ const PostCardActionButton = forwardRef(function PostCardActionButton({
 })
 
 const PostCardInteractionButton = forwardRef(function PostCardButton({
-  initialCount = 0,
+  count = 0,
   activeColor = "red",
   inactiveColor = "gray",
   color = "white",
   callBack = () => {},
-  active = false,
+  isActive = false,
   Icon
 }, ref) {
-  const [isActive, setIsActive] = useState(active);
-  const [count, setCount] = useState(initialCount);
-
+  
   // Set the active state and count
   const handleClick = (e) => {
     e.stopPropagation();
-    setIsActive(!isActive);
     setCount(prevCount => isActive ? prevCount-1 : prevCount+1)
     if (callBack) {
       console.log("calling back !isactive", !isActive)

@@ -19,21 +19,39 @@ const PostCardPreviewFooter = ({
 }) => {
   const [postLink, setPostLink] = useState("")
   const [isLiked, setIsLiked] = useState(false)
+  const [updatedLikeCount, setupdatedLikeCount] = useState(likeCount)
   const pathname = usePathname()
   const { toast } = useToast()
 
   useEffect(() => {
-    // set postlink
-    // fetch photos
     setPostLink(window.location.origin + pathname)
 
-    // fetch like status
+    const getLikeStatus = async () => {
+      if (!postId || !userId) {
+        return;
+      }
 
-    setPostLink(window.location.origin + pathname)
-
-    // fetch like status
-
-  }, [])
+      try {
+        const urlParam = new URLSearchParams({ postId, userId });
+        const query = urlParam.toString()
+        const response = await fetch(`/api/posts/${postId}/likes?${query}`, {
+          method: "GET"
+        });
+  
+        if (!response.ok) {
+          throw new Error("Failed to fetch like status");
+        }
+  
+        const data = await response.json();
+        console.log("data from getLikeStatus: ", data);
+        console.log("isLiked: ", data.isLiked, "by userId: ", userId, "for postId: ", postId);
+        setIsLiked(data.isLiked)
+        setupdatedLikeCount(data.likeCount)
+      } catch (error) {
+      }
+    }
+    getLikeStatus();
+  }, [postId, userId])
 
   const handleLike = async (isActive, count) => {
     // Update like status
@@ -54,6 +72,7 @@ const PostCardPreviewFooter = ({
       if (!response.ok) {
         throw new Error("Failed to update like status");
       }
+
     } catch (error) {
       handleToast("Failed to update like status", error);
     }
@@ -92,13 +111,13 @@ const PostCardPreviewFooter = ({
   return (
     <CardFooter className="flex gap-1">
       <PostCardInteractionButton 
-        initialCount={likeCount}
+        count={updatedLikeCount}
         activeColor="#f91980"
         inactiveColor=""
         color="pink"
         callBack={handleLike} 
         Icon={Heart} 
-
+        isActive={isLiked}
       />
       <PostCardActionButton
         initialCount={commentCount}
