@@ -11,7 +11,6 @@ import PostCardPreviewFooter from "@/components/post-card/post-card-preview/foot
 import PostCardCarousel from "@/components/post-card/post-card-carousel";
 import ReplyPopup from "@/components/post-card/reply";
 import { useAuth } from '@/components/wrappers/AuthCheckWrapper';
-import { set } from "date-fns";
 
 export default function Component({
   postId=null,
@@ -58,7 +57,7 @@ export default function Component({
   // Push to path without queries if user isn't loaded
   useEffect(() => {
     if (!replierData.user && searchParams.size !== 0) {
-      router.push(pathname);
+      router.replace(pathname);
       return;
     }
   }, [user, searchParams]);
@@ -74,8 +73,8 @@ export default function Component({
       // fetch all of user
       // fetch 
       
+      // set user, post, replier
     } else {
-      // fetch user data
       setUser({
         pfp: pfp, 
         name: name, 
@@ -173,9 +172,9 @@ export default function Component({
         onClick={handleRedirect}
       >
         <PostCardPreviewHeader
-          pfp={pfp}
-          name={name}
-          username={username}
+          pfp={user.pfp}
+          name={user.name}
+          username={user.username}
           creationDate={post.creationDate}
           user={user}
         />
@@ -194,7 +193,7 @@ export default function Component({
               likeCount={post.likeCount}
               commentCount={post.commentCount}
               shareCount={post.shareCount}
-              postId={postId}
+              postId={post.postId}
               userId={userId}
               openReply={openReply}
             />

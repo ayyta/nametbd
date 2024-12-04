@@ -6,6 +6,7 @@ import { Heart, MessageCircle, Share2 } from "lucide-react"
 import { PostCardActionButton, PostCardInteractionButton } from "@/components/post-card/post-card-buttons"
 import { CardFooter } from "@/components/ui/card"
 import { useToast } from "@/components/hooks/use-toast"
+import { usePathname } from "next/navigation"
 
 const PostCardPreviewFooter = ({
   hasButtons=true,
@@ -17,16 +18,51 @@ const PostCardPreviewFooter = ({
   openReply,
 }) => {
   const [postLink, setPostLink] = useState("")
+  const [isLiked, setIsLiked] = useState(false)
+  const pathname = usePathname()
   const { toast } = useToast()
 
   useEffect(() => {
     // set postlink
     // fetch photos
-    setPostLink("google.com")
+    setPostLink(window.location.origin + pathname)
+
+    // fetch like status
+
   }, [])
 
-  const handleLike = (isActive, count) => {
+  const handleLike = async (isActive, count) => {
     console.log(`Like is now ${isActive ? "active": "inactive"} with count: ${count}`);
+    // Update like status
+    setIsLiked(isActive)
+
+    if (!postId || !userId) {
+      console.error("postId is undefined/null or userId is undefined/null");
+      return;
+    }
+
+    try {
+      const urlParam = new URLSearchParams({ postId, isActive, userId });
+      const query = urlParam.toString()
+      console.log("postId", postId)
+      const response = await fetch(`/api/posts/${postId}/likes?${query}`, {
+        method: "POST", 
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update like status");
+      }
+    } catch (error) {
+      console.log("Failed to update like status", error);
+      handleToast("Failed to update like status", error);
+    }
+
+  }
+
+  const handleToast = (text) => {
+    toast({
+      title: text,
+    })
   }
 
   const handleShare = () => {
@@ -61,6 +97,7 @@ const PostCardPreviewFooter = ({
         color="pink"
         callBack={handleLike} 
         Icon={Heart} 
+
       />
       <PostCardActionButton
         initialCount={commentCount}

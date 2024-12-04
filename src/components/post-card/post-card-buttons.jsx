@@ -105,9 +105,10 @@ const PostCardInteractionButton = forwardRef(function PostCardButton({
   inactiveColor = "gray",
   color = "white",
   callBack = () => {},
+  active = false,
   Icon
 }, ref) {
-  const [isActive, setIsActive] = useState(false);
+  const [isActive, setIsActive] = useState(active);
   const [count, setCount] = useState(initialCount);
 
   // Set the active state and count
@@ -116,6 +117,7 @@ const PostCardInteractionButton = forwardRef(function PostCardButton({
     setIsActive(!isActive);
     setCount(prevCount => isActive ? prevCount-1 : prevCount+1)
     if (callBack) {
+      console.log("calling back !isactive", !isActive)
       callBack(!isActive, count)
     }
   }
