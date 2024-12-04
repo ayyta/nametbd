@@ -40,7 +40,6 @@ export async function GET(req, res) {
 }
 
 export async function POST(req, res) {
-  console.log("POST request to /api/posts/[postId]/likes");
   try {
     const {searchParams} = new URL(req.url);
     const postId = searchParams.get("postId");
@@ -50,13 +49,8 @@ export async function POST(req, res) {
     if (!postId || !userId) {
       throw new Error("postId or isLiked is null or undefined");
     }
-    console.log("isLiked: ", isLiked);
-    console.log("postId: ", postId);
-    console.log("searchParams: ", searchParams);
-
     // Create or remove like from like table
     if (isLiked === "true") {
-      console.log("Adding like");
       // Add like
       const { data, error } = await supabaseService
         .from("likes")
@@ -67,8 +61,6 @@ export async function POST(req, res) {
         throw new Error(error.message);
       }
     } else {
-      console.log("Removing like");
-
       // Remove like
       const { data, error } = await supabaseService
         .from("likes")
@@ -81,10 +73,9 @@ export async function POST(req, res) {
     }
 
     // Update like count on database
-    handleLikeUpdate(postId, isLiked);
+    const updatedLikeCount = await handleLikeUpdate(postId, isLiked);
 
-
-    return NextResponse.json({ message: "Successfully updated like count" }, { status: 200 });
+    return NextResponse.json({ updatedLikeCount }, { status: 200 });
   } catch (error) {
     console.error("Failed to update like status in api", error);
     return NextResponse.json({ error: error.message }, { status: 400 });
@@ -119,6 +110,9 @@ const handleLikeUpdate = async (postId, isLiked) => {
   if (error) {
     throw new Error("Failed to update like count");
   }
+
+  return updatedLikeCount;
+
 };
 
 

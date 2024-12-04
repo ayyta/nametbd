@@ -43,8 +43,6 @@ const PostCardPreviewFooter = ({
         }
   
         const data = await response.json();
-        console.log("data from getLikeStatus: ", data);
-        console.log("isLiked: ", data.isLiked, "by userId: ", userId, "for postId: ", postId);
         setIsLiked(data.isLiked)
         setupdatedLikeCount(data.likeCount)
       } catch (error) {
@@ -72,7 +70,8 @@ const PostCardPreviewFooter = ({
       if (!response.ok) {
         throw new Error("Failed to update like status");
       }
-
+      const data = await response.json();
+      setupdatedLikeCount(data.updatedLikeCount)
     } catch (error) {
       handleToast("Failed to update like status", error);
     }

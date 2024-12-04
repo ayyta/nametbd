@@ -1,5 +1,6 @@
 import React, { useState, forwardRef, useEffect } from "react"
 import { Button } from "@/components/ui/button"
+import { set } from "date-fns";
 
 const PostCardActionButton = forwardRef(function PostCardActionButton({
   color,
@@ -108,13 +109,17 @@ const PostCardInteractionButton = forwardRef(function PostCardButton({
   isActive = false,
   Icon
 }, ref) {
-  
+  const [updatedLikeCount, setupdatedLikeCount] = useState(count);
+
+  useEffect(() => {
+    setupdatedLikeCount(count);
+  }, [count]);
+
   // Set the active state and count
   const handleClick = (e) => {
     e.stopPropagation();
-    setCount(prevCount => isActive ? prevCount-1 : prevCount+1)
+    setupdatedLikeCount(isActive ? updatedLikeCount - 1 : updatedLikeCount + 1);
     if (callBack) {
-      console.log("calling back !isactive", !isActive)
       callBack(!isActive, count)
     }
   }
@@ -149,7 +154,7 @@ const PostCardInteractionButton = forwardRef(function PostCardButton({
           transition-colors 
           duration-150`}
       >      
-        {abbreviateNumber(count)}
+        {abbreviateNumber(updatedLikeCount)}
       </span>
     </Button>
   )
