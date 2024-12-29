@@ -34,14 +34,10 @@ const Component = ({
       if (!response.ok) throw new Error('Failed to fetch posts');
       const data = await response.json();
       setPosts(data.data);
-      console.log("data", data);
-      //setPosts(data);
     }
     fetchPosts();
   },  [])
 
-
-  console.log("user", user);
   return (
     <div className="flex flex-col">
       {posts.map((post, i) => {

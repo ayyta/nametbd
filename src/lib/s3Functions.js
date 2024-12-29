@@ -24,13 +24,22 @@ const uploadFilesToS3 = async (file, path="") => {
   const buffer = Buffer.from(arrayBuffer); // Convert ArrayBuffer to Buffer
 
   // Make path for file
-  const objectKey = createHexPath(path);
+  let objectKey = createHexPath(path);
 
+  let contentType = file.type;
+  if (file.type === "video/mp4") {
+    contentType = "video/mp4"; // Correct MIME for MP4
+    objectKey += ".mp4";
+  } else if (file.type === "video/quicktime" || file.name.endsWith(".mov")) {
+    objectKey += ".mov";
+    contentType = "video/quicktime"; // Correct MIME for MOV (or QuickTime videos)
+  }
+  
   const command = new PutObjectCommand({
     Bucket: process.env.BUCKET_NAME,
     Key: objectKey,
     Body: buffer,
-    ContentType: file.type,
+    ContentType: contentType,
   });
 
   try {

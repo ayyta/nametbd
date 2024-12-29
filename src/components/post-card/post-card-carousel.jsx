@@ -34,18 +34,36 @@ const Component = forwardRef(function PostCardCarousel({
           >
 
             <CarouselContent className="" onClick={closeCarousel}>
-              {images.map((image, index) => (
-                <CarouselItem key={index} className="w-fit h-screen flex justify-center items-center relative">
-                  <Image
-                    src={image}
-                    alt={`Image ${index + 1}`}
-                    width={500}
-                    height={300}
-                    quality={100}
-                    onClick={(e) => {e.stopPropagation()}}
-                  />
-                </CarouselItem>
-              ))}
+              {images.map((src, index) => {
+                const isVideo = src.includes(".mp4") || src.includes(".mov");
+                
+                return (
+                  <CarouselItem key={index} className="w-fit h-screen flex justify-center items-center relative">
+                    {isVideo ? (
+                      <video 
+                        alt={`Video ${index + 1}`}
+                        width={900} 
+                        height={549} 
+                        controls 
+                        onClick={(e) => {e.stopPropagation()}}
+                      >
+                        <source src={src} type="video/mp4" />
+                        Your browser does not support the video tag.
+                      </video>
+                    ) : (
+                      <Image
+                        src={src}
+                        alt={`Image ${index + 1}`}
+                        width={900}
+                        height={540}
+                        quality={100}
+                        onClick={(e) => {e.stopPropagation()}}
+                      />
+                    )}
+                  </CarouselItem>
+                )                
+               }
+              )}
             </CarouselContent>
             {images.length > 1 ? <CarouselPrevious className="absolute top-1/2 left-8 transform -translate-y-1/2 -translate-x-1/2 z-10"/> : null}
             {images.length > 1 ? <CarouselNext className="absolute top-1/2 right-0 transform -translate-y-1/2 -translate-x-1/2 z-10"/> : null}

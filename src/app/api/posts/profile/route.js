@@ -7,7 +7,6 @@ export async function GET(req, res) {
   if (!token) {
     return NextResponse.json({ error: "No token provided" }, { status: 401 });
   }
-
   try {
     const { data: { user } } = await supabaseService.auth.getUser(token); // Get user by token
     const currentUserId = user.id;
@@ -86,3 +85,13 @@ export async function GET(req, res) {
   }
 
 }
+
+const differenceInMinutes = (date1, date2) => {
+  // Convert both dates to milliseconds
+  const diffMilliseconds = Math.abs(date1 - date2);
+
+  // Convert milliseconds to minutes (1000ms = 1 second, 60 seconds = 1 minute)
+  const diffMinutes = Math.floor(diffMilliseconds / (1000 * 60));
+
+  return diffMinutes;
+};

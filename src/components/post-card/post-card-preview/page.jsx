@@ -78,26 +78,43 @@ export default function Component({
     }
     
   }, [])
+
   const renderImages = () => (
     post.images.length > 0 && (
       <div className={`grid gap-0.5 ${post.images.length > 1 ? 'grid-cols-2' : 'grid-cols-1'} rounded-2xl border border-white/30 overflow-hidden cursor-pointer active:scale-95 transition-all duration-150 ease-in-out w-fit`}>
-        {post.images.map((src, index) => (
-          <div 
-            className={`relative w-fit flex`} 
-            key={index} 
-            onClick={(e) => {e.stopPropagation(); openCarousel(index);}}
-          >
-            <Image
-              src={src}
-              quality={post.images.length > 1 ? 50 : 100}
-              alt={`Image ${index + 1}`}
-              layout="intrinsic" // Let the image control the container's size
-              width={post.images.length > 1 ? 400 : 700} // Example width based on media length
-              height={post.images.length > 1 ? 300 : 500} // Example height based on media length
-              className={`${post.images.length > 1 ? "object-cover max-h-52" : "object-contain"} max-h-161`}
-            />
-          </div>
-        ))}
+        {post.images.map((src, index) => {
+          const isVideo = src.includes(".mp4") || src.includes(".mov");
+
+          return (
+            <div 
+              className={`relative w-fit flex`} 
+              key={index} 
+              onClick={(e) => {e.stopPropagation(); openCarousel(index);}}
+            >
+              {isVideo ? (
+                <video 
+                  width={post.images.length > 1 ? 400 : 700} 
+                  height={post.images.length > 1 ? 300 : 500} 
+                  controls 
+                  className={`${post.images.length > 1 ? "object-cover max-h-52" : "object-contain"} max-h-161`}
+                >
+                  <source src={src} type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+              ) : (
+                <Image
+                  src={src}
+                  quality={post.images.length > 1 ? 50 : 100}
+                  alt={`Image ${index + 1}`}
+                  layout="intrinsic" // Let the image control the container's size
+                  width={post.images.length > 1 ? 400 : 700} // Example width based on media length
+                  height={post.images.length > 1 ? 300 : 500} // Example height based on media length
+                  className={`${post.images.length > 1 ? "object-cover max-h-52" : "object-contain"} max-h-161`}
+                />
+              )}
+            </div>
+          )}
+        )}
       </div>
     )
   )
