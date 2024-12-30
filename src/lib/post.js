@@ -1,3 +1,5 @@
+import supabaseAnon from './supabaseAnonClient';
+
 const handlePost = async (uploadText, mediaList, userId) => {
   // Upload media to S3
   const mediaPaths = await uploadToS3(mediaList);
@@ -29,10 +31,13 @@ const handlePost = async (uploadText, mediaList, userId) => {
       console.error("Error posting");
     }
 
-    // const result = await response.json();
+    const result = await response.json();
+    console.log("result", result);
     // console.log("Post successful");
+    return result.post_id;
   } catch (error) {
     console.error("Error posting", error);
+    return null;
   }
 }
 
@@ -80,4 +85,4 @@ const uploadToS3 = async (mediaList) => {
   return mediaPaths;
 };
 
-export { handlePost, uploadToS3};
+export { handlePost, uploadToS3 };

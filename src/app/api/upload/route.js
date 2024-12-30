@@ -69,7 +69,7 @@ export async function POST(request, response) {
         }
     })
 
-    return NextResponse.json({ message: 'Post Created' });
+    return NextResponse.json({ message: 'Post Created', post_id }, { status: 201 });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: error.message }, { status: 500 });

@@ -13,6 +13,7 @@ import ReplyText from './post-card-reply/post-card-reply-body/reply-text'
 import ReplyMedia from './post-card-reply/post-card-reply-body/reply-media'
 import ReplyUtilities from './post-card-reply/post-card-reply-utilities/reply-utilities'
 import ReplyGifPopup from './post-card-reply/post-card-reply-body/reply-gif-popup'
+import { handlePost, addToReplyDB } from "@/lib/post";
 
 const Component = ({
   isOpen=false,
@@ -77,7 +78,7 @@ const ReplyCard = ({
   }
 }) => {
   console.log("Post ID:", postId);
-  const handleReply = () => {
+  const handleReply = async () => {
     if (postId === "") {
       console.error("Post ID is empty. Refresh the page and try again.");
       return;
@@ -85,8 +86,25 @@ const ReplyCard = ({
     // call upload
     // then make something in replies
     // 
+    const replyPostId = await handlePost(text, media, replier.id);
+    if (!replyPostId) {
+      console.error("Error posting reply");
+      return;
+    }
+    console.log("replyPostId:", replyPostId);
+    console.log("postId:", postId);
+    // Add to reply db
+    const params = new URLSearchParams({
+      postId: postId,
+      replyPostId: replyPostId,
+    });
+
+    fetch("/api/reply?" + params.toString(), {
+      method: "POST",
+    })
+      
     console.log("Replying to post...");
-    console.log("replier:", replier);
+    console.log("replier:", replier.id);
     console.log("text:", text);
     console.log("media:", media);
     console.log("gifs:", gifs);
