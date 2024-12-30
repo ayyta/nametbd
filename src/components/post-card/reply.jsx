@@ -82,7 +82,9 @@ const ReplyCard = ({
       console.error("Post ID is empty. Refresh the page and try again.");
       return;
     }
-
+    // call upload
+    // then make something in replies
+    // 
     console.log("Replying to post...");
     console.log("replier:", replier);
     console.log("text:", text);
