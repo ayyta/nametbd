@@ -16,6 +16,7 @@ export async function GET(req, res) {
       .from("post")
       .select("*")
       .eq("user_id", currentUserId)
+      //.not("post_id", "in", supabaseService.from("replies").select("reply_id"))
       .order("created_at", { ascending: false })
       .limit(10);
 
