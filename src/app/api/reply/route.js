@@ -7,8 +7,6 @@ export async function POST(req, res) {
   const replyPostId = url.searchParams.get("replyPostId");
 
   try {
-    console.log("postId:", postId);
-    console.log("replyPostId:", replyPostId);
     const { data, error } = await supabaseService
     .from("replies")
     .insert([

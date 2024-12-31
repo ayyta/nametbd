@@ -3,6 +3,7 @@ import supabaseService from './supabaseServiceClient';
 import { fetchUserProfile } from '@/components/FetchUserProfile';
 // Given post, format created_at field
 function formatCreatedAt(posts) {
+  if (!posts) return [];
   posts.forEach(post => {
     const postDate = new Date(post.created_at);
     const now = new Date();
@@ -29,6 +30,8 @@ function formatCreatedAt(posts) {
 
 // Fetch the media for each post
 async function fetchMediaForPosts(posts) {
+    if (!posts) return [];
+
     for (const post of posts) {
       const { data } = await supabaseService
         .from("media")
