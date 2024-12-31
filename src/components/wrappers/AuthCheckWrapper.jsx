@@ -19,34 +19,22 @@ export default function AuthCheckWrapper({ children }) {
       const {
         data: { session },
       } = await supabaseAnon.auth.getSession();
-
-      const restrictedPaths = ['/login', '/register'];
-
+      console.log('pathname', pathname)
       // Skip redirect if user is on login or register page
-      if (!session && !(restrictedPaths.includes(pathname))) {
-        console.log("path name", pathname)
-        router.push('/login');
+      if (!session && (pathname !== '/login' || pathname !== '/register')) {
         setLoading(false);
-      }
-      else if (!session) {
-        if (!restrictedPaths.includes(pathname)) {
-          router.push("/login")
-          setLoading(false)
-        }
-        setLoading(false)
-      }
-      // Send to home if logged in and accessing login/register
-      else if (
+        router.push('/login');
+      } else if (
         session &&
         (pathname === '/login' || pathname === '/register')
       ) {
+        setLoading(true);
         router.push('/home');
-        setLoading(false);
       } else {
+        setLoading(false);
         const fetchedUserProfile = await fetchUserProfile(session.user.id);
         const updatedUser = { ...session.user, ...fetchedUserProfile };
         setUser(updatedUser);
-        setLoading(false);
       }
     };
 

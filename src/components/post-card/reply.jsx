@@ -13,6 +13,7 @@ import ReplyText from './post-card-reply/post-card-reply-body/reply-text'
 import ReplyMedia from './post-card-reply/post-card-reply-body/reply-media'
 import ReplyUtilities from './post-card-reply/post-card-reply-utilities/reply-utilities'
 import ReplyGifPopup from './post-card-reply/post-card-reply-body/reply-gif-popup'
+import { handlePost, addToReplyDB } from "@/lib/post";
 
 const Component = ({
   isOpen=false,
@@ -25,7 +26,11 @@ const Component = ({
     pfp: "/placeholder-avatar.jpg",
     name: "John Doe",
   },
+  postData={}
+
 }) => {
+  // console.log("user in rpely.jsx",user)
+  // console.log("replier in rpely.jsx",replier)
   const { pfp, name, username } = user
   const closeReply = () => {
     setIsOpen(false)
@@ -50,11 +55,14 @@ const Component = ({
           <PostCardPreview 
             pfp={pfp}
             name={name}
+            creationDate={postData.creationDate}
+            imagesProp={postData.images}
+            textContent={postData.textContent}
             username={username}
             hasButtons={false}
             hasReplies={true}
           />
-          <ReplyCard user={replier} />
+          <ReplyCard postId={postData.postId} replier={replier} />
         </CardContent>
       </Card>
     </div>
@@ -63,15 +71,43 @@ const Component = ({
 
 const ReplyCard = ({
   // closeReply = () => {},
-  user={
+  postId="",
+  replier={
     pfp: "/placeholder-avatar.jpg",
     name: "John Doe",
-  },
+  }
 }) => {
-  const handleReply = () => {
-    console.log("Replying to post");
-    // console.log(text);    // Log the reply text
-    // console.log(media); // Log the media
+  console.log("Post ID:", postId);
+  const handleReply = async () => {
+    if (postId === "") {
+      console.error("Post ID is empty. Refresh the page and try again.");
+      return;
+    }
+    // call upload
+    // then make something in replies
+    // 
+    const replyPostId = await handlePost(text, media, replier.id);
+    if (!replyPostId) {
+      console.error("Error posting reply");
+      return;
+    }
+    console.log("replyPostId:", replyPostId);
+    console.log("postId:", postId);
+    // Add to reply db
+    const params = new URLSearchParams({
+      postId: postId,
+      replyPostId: replyPostId,
+    });
+
+    fetch("/api/reply?" + params.toString(), {
+      method: "POST",
+    })
+      
+    console.log("Replying to post...");
+    console.log("replier:", replier.id);
+    console.log("text:", text);
+    console.log("media:", media);
+    console.log("gifs:", gifs);
   }
 
   const [text, setText] = useState("");   // State to manage the reply text
@@ -91,7 +127,7 @@ const ReplyCard = ({
     setMedia((prevMedia) => [...prevMedia, ...newMediaArray]);
   }
 
-  const { pfp, name } = user
+  const { pfp, name } = replier
   return (
     <>
       <Card className="w-192 h-fit bg-transparent border-none text-white">

@@ -2,7 +2,7 @@
 "use client"
 
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
@@ -10,7 +10,7 @@ import PostCardPreviewHeader from "@/components/post-card/post-card-preview/head
 import PostCardPreviewFooter from "@/components/post-card/post-card-preview/footer";
 import PostCardCarousel from "@/components/post-card/post-card-carousel";
 import ReplyPopup from "@/components/post-card/reply";
-import supabaseAnon from "@/lib/supabaseAnonClient";
+import { useAuth } from '@/components/wrappers/AuthCheckWrapper';
 
 export default function Component({
   postId=null,
@@ -42,28 +42,38 @@ export default function Component({
     following: false, 
     friends: false
   });
-  const [post, setPost] = useState({
-    textContent: textContent,
-    images: imagesProp,
-    likeCount: likeCount,
-    commentCount: commentCount,
-    shareCount: shareCount,
-  });
-
+  const [replier, setReplier] = useState({});
+  const [post, setPost] = useState("");
+  const replierData = useAuth();
   const router = useRouter();
+  const pathname = usePathname()
+  const searchParams = useSearchParams();
 
   const openCarousel = () => setIsCarouselOpen(true);
   const closeCarousel = () => setIsCarouselOpen(false);
   const openReply = () => setIsReplyOpen(true);
-
+  
+  // Push to path without queries if user isn't loaded
   useEffect(() => {
+    if (!replierData.user && searchParams.size !== 0) {
+      router.replace(pathname);
+      return;
+    }
+  }, [user, searchParams]);
+
+  // Set data
+  useEffect(() => {
+    if (!replierData.user) {
+      return;
+    }
+
     if (!isLoaded) {
       // name, username, creationDate, textContent, imagesProp, likeCount, commentCount, shareCount
       // fetch all of user
       // fetch 
       
+      // set user, post, replier
     } else {
-      // fetch user data
       setUser({
         pfp: pfp, 
         name: name, 
@@ -75,16 +85,29 @@ export default function Component({
         following: false, 
         friends: false
       });
+      setPost({
+        postId: postId,
+        creationDate: creationDate,
+        textContent: textContent,
+        images: imagesProp,
+        likeCount: likeCount,
+        commentCount: commentCount,
+        shareCount: shareCount,
+      });
+      setReplier({
+        id: replierData.user.id,
+        pfp: replierData.user.pfpLink,
+        name: replierData.user.userProfile.name,
+        username: replierData.user.userProfile.username,
+      });
     }
-    
-  }, [])
+  }, [isLoaded, replierData])
 
   const renderImages = () => (
     post.images.length > 0 && (
       <div className={`grid gap-0.5 ${post.images.length > 1 ? 'grid-cols-2' : 'grid-cols-1'} rounded-2xl border border-white/30 overflow-hidden cursor-pointer active:scale-95 transition-all duration-150 ease-in-out w-fit`}>
-        {post.images.map((src, index) => {
+        {post.images && post.images.map((src, index) => {
           const isVideo = src.includes(".mp4") || src.includes(".mov");
-
           return (
             <div 
               className={`relative w-fit flex`} 
@@ -121,9 +144,21 @@ export default function Component({
 
   const handleRedirect = () => {
     if (isCurrentPost) return;
-    console.log("Redirecting to post page");
+
     if (postId && username) {
-      router.push(`${username}/post/${postId}`);
+      const searchParams = new URLSearchParams({ 
+        userId: userId,
+        pfp: user.pfp,
+        name: user.name,
+        username: user.username,
+        creationDate: creationDate,
+        textContent: post.textContent,
+        imagesProp: JSON.stringify(post.images),
+        likeCount: post.likeCount,
+        commentCount: post.commentCount,
+        shareCount: post.shareCount,
+      });
+      router.push(`/${username}/post/${postId}?${searchParams.toString()}`);
     } else {
       console.error("Post ID or username not provided");
     }
@@ -136,10 +171,10 @@ export default function Component({
         onClick={handleRedirect}
       >
         <PostCardPreviewHeader
-          pfp={pfp}
-          name={name}
-          username={username}
-          creationDate={creationDate}
+          pfp={user.pfp}
+          name={user.name}
+          username={user.username}
+          creationDate={post.creationDate}
           user={user}
         />
         <div className="flex">
@@ -150,14 +185,14 @@ export default function Component({
           <div className="">
             <CardContent className="space-y-4">
               <p>{textContent}</p>
-              {renderImages()}
+              {post.images && renderImages()}
             </CardContent>
             <PostCardPreviewFooter
               hasButtons={hasButtons}
               likeCount={post.likeCount}
               commentCount={post.commentCount}
               shareCount={post.shareCount}
-              postId={postId}
+              postId={post.postId}
               userId={userId}
               openReply={openReply}
             />
@@ -169,7 +204,14 @@ export default function Component({
         isCarouselOpen={isCarouselOpen} 
         closeCarousel={closeCarousel}
       />
-      <ReplyPopup isOpen={isReplyOpen} setIsOpen={setIsReplyOpen} />
+      <ReplyPopup 
+        user={user} 
+        replier={replier} 
+        isOpen={isReplyOpen} 
+        setIsOpen={setIsReplyOpen} 
+        postData={post}
+        
+        />
     </>
 
   )

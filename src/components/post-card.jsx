@@ -37,7 +37,6 @@ const Component = ({
     }
     fetchPosts();
   },  [])
-
   return (
     <div className="flex flex-col">
       {posts.map((post, i) => {
