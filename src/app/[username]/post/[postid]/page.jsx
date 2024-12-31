@@ -91,62 +91,62 @@ const Replies = ({
   const [isLoading, setIsLoading] = useState(true);
   const [replies, setReplies] = useState([]);
   
-  useEffect(() => {
-    setReplies([
-      {
-        postId: 1,
-        userId: "122",
-        pfp: "/placeholder-avatar.jpg",
-        name: "1",
-        username: "1",
-        creationDate : "2h ago",
-        content : "This is a sample post content. It can be much longer and will wrap to multiple lines if needed. ",
-        imagesProp : [],
-        likeCount: 1700,
-        commentCount: 2500,
-        shareCount: 1000000,
-        replies: [{
-          postId: 2,
-          userId: "123",
-          pfp: "/placeholder-avatar.jpg",
-          name: "2",
-          username: "2",
-          creationDate : "2h ago",
-          content : "This is a sample post content. second post ",
-          imagesProp : ["/massageServices.jpg", "/haircut2.jpg"],
-          likeCount: 1000,
-          commentCount: 2000,
-          shareCount: 5000,
-        },{
-          postId: 3,
-          userId: "123",
-          pfp: "/placeholder-avatar.jpg",
-          name: "3",
-          username: "3",
-          creationDate : "2h ago",
-          content : "This is a sample post content. second post ",
-          imagesProp : ["/massageServices.jpg"],
-          likeCount: 1000,
-          commentCount: 2000,
-          shareCount: 5000,
-        }]
-      }, {
-      postId: 1,
-        userId: "122",
-        pfp: "/placeholder-avatar.jpg",
-        name: "John Doe",
-        username: "johndoe",
-        creationDate : "2h ago",
-        content : "This is a sample post content. It can be much longer and will wrap to multiple lines if needed. ",
-        imagesProp : [],
-        likeCount: 1700,
-        commentCount: 2500,
-        shareCount: 1000000,
-        replies: [],
-      }
-    ])
-    setIsLoading(false)
-  }, []);
+  // useEffect(() => {
+  //   setReplies([
+  //     {
+  //       postId: 1,
+  //       userId: "122",
+  //       pfp: "/placeholder-avatar.jpg",
+  //       name: "1",
+  //       username: "1",
+  //       creationDate : "2h ago",
+  //       content : "This is a sample post content. It can be much longer and will wrap to multiple lines if needed. ",
+  //       imagesProp : [],
+  //       likeCount: 1700,
+  //       commentCount: 2500,
+  //       shareCount: 1000000,
+  //       replies: [{
+  //         postId: 2,
+  //         userId: "123",
+  //         pfp: "/placeholder-avatar.jpg",
+  //         name: "2",
+  //         username: "2",
+  //         creationDate : "2h ago",
+  //         content : "This is a sample post content. second post ",
+  //         imagesProp : ["/massageServices.jpg", "/haircut2.jpg"],
+  //         likeCount: 1000,
+  //         commentCount: 2000,
+  //         shareCount: 5000,
+  //       },{
+  //         postId: 3,
+  //         userId: "123",
+  //         pfp: "/placeholder-avatar.jpg",
+  //         name: "3",
+  //         username: "3",
+  //         creationDate : "2h ago",
+  //         content : "This is a sample post content. second post ",
+  //         imagesProp : ["/massageServices.jpg"],
+  //         likeCount: 1000,
+  //         commentCount: 2000,
+  //         shareCount: 5000,
+  //       }]
+  //     }, {
+  //     postId: 1,
+  //       userId: "122",
+  //       pfp: "/placeholder-avatar.jpg",
+  //       name: "John Doe",
+  //       username: "johndoe",
+  //       creationDate : "2h ago",
+  //       content : "This is a sample post content. It can be much longer and will wrap to multiple lines if needed. ",
+  //       imagesProp : [],
+  //       likeCount: 1700,
+  //       commentCount: 2500,
+  //       shareCount: 1000000,
+  //       replies: [],
+  //     }
+  //   ])
+  //   setIsLoading(false)
+  // }, []);
 
   // If no replies, show message
   if (replies.length === 0 && !isLoading) {

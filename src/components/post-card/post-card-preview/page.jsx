@@ -29,7 +29,6 @@ export default function Component({
   isCurrentPost = false,
   isLoaded = name && username && creationDate,
 }) {
-
   const [isCarouselOpen, setIsCarouselOpen] = useState(false);
   const [isReplyOpen, setIsReplyOpen] = useState(false);
   const [user, setUser] = useState({
