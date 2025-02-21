@@ -195,6 +195,7 @@ export default function Component({
               postId={post.postId}
               userId={userId}
               openReply={openReply}
+              username={user.username}
             />
           </div>
         </div>

@@ -16,6 +16,8 @@ const PostCardPreviewFooter = ({
   postId=null,
   userId=null,
   openReply,
+  username,
+
 }) => {
   const [postLink, setPostLink] = useState("")
   const [isLiked, setIsLiked] = useState(false)
@@ -24,7 +26,7 @@ const PostCardPreviewFooter = ({
   const { toast } = useToast()
 
   useEffect(() => {
-    setPostLink(window.location.origin + pathname)
+    setPostLink(window.location.origin + "/" + username + "/post/" + postId)
 
     const getLikeStatus = async () => {
       if (!postId || !userId) {

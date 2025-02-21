@@ -56,7 +56,7 @@ const Component = ({
             imagesProp={post.mediaList}
             likeCount={post.likeCount}
             commentCount={post.comment_count} // parse comment count
-            shareCount={post.share_count}
+            shareCount={0}
             hasReplies={false}
             hasButtons={true}
           />
