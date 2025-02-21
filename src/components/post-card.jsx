@@ -12,15 +12,7 @@ const Component = ({
 }) => {
   const { user } = useAuth();
   const [posts, setPosts] = useState([]);
-  // useEffect( () => {
-  //   const checkAuth = async () => {
-  //     const { 
-  //         data: { session }
-  //       } = await supabaseAnon.auth.getSession();
-  //     setUser(session?.user || null);
-  //   }
-  //   checkAuth();
-  // }, [])
+
   useEffect(() => {
     const fetchPosts = async () => {
       const { 
