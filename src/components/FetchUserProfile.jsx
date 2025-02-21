@@ -2,7 +2,7 @@ import { fetchMediaPathByIds, gets3Images } from '@/app/profile/utils';
 
 export async function fetchUserProfile(userId) {
   try {
-    const response = await fetch(`/api/profile/user?userId=${userId}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/profile/user?userId=${userId}`, {
       method: 'GET',
     });
 

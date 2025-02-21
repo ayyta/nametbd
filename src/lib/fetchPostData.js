@@ -7,7 +7,7 @@ const fetchPostData = async (postId, searchParams) => {
   let postData;
   if (searchParams.get("userId") === null) {
     // fetch data
-    const response = await fetch(`/api/posts/post?postId=${postId}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/post?postId=${postId}`, {
      method: "GET", 
     });
 
@@ -46,6 +46,8 @@ const fetchPostData = async (postId, searchParams) => {
       shareCount: parseParam("shareCount", searchParams),
     };
   }
+
+  
   
   return postData;
 };
@@ -66,8 +68,24 @@ function parseListParam(prop, searchParams) {
   return JSON.parse(param)
 }
 
-const fetchReplyData = async (postId) => {
-  return {}
+const fetchReplyData = async (postId, selectedSort) => {
+  // fetch data
+  const params = new URLSearchParams({
+    postId: postId,
+    selectedSort: selectedSort,
+  })
+  const response = await fetch(`/api/posts/${postId}/replies?${params.toString()}`, {
+    method: "GET", 
+  });
+
+  // console.log("response: ", response);
+  if (!response.ok) {
+    // Handle error if the response is not okay (e.g., 404 or 500)
+    throw new Error("Failed to fetch replies");
+  }
+  const data = await response.json();
+  console.log("data in fetchpsot data", data)
+  return data;
 };
 
 export { fetchPostData, fetchReplyData };

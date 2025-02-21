@@ -39,7 +39,7 @@ const Component = ({
   },  [])
   return (
     <div className="flex flex-col">
-      {posts.map((post, i) => {
+      {posts && posts.map((post, i) => {
         return (
           <PostCardPreview 
             key={i}
