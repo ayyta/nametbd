@@ -105,7 +105,6 @@ const PostCardPreviewFooter = ({
     openReply();
     console.log("Pressed comment button");
   }
-
   if (!hasButtons) return null;
   return (
     <CardFooter className="flex gap-1">

@@ -42,8 +42,19 @@ export async function GET(req, res) {
     // Fetch the media for each post
     postsList = await fetchMediaForPosts(postsList);
     //console.log(posts);
-    // get the user's profile
-    // 
+    // Find comment count for eaach post
+    for (let post of postsList) {
+      const { data: commentCount, error: commentError } = await supabaseService
+        .from("replies")
+        .select("reply_id")
+        .eq("post_id", post.post_id);
+      
+      if (commentError) {
+        throw new Error(commentError.message);
+      }
+      post.comment_count = commentCount.length;
+    }
+    
     return NextResponse.json({ data: posts }, { status: 200 });
   } catch (error) {
     console.error(error.message);

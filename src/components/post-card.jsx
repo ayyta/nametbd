@@ -5,6 +5,7 @@ import PostCardPreview from '@/components/post-card/post-card-preview/page';
 import supabaseAnon from '@/lib/supabaseAnonClient';
 import { useAuth } from '@/components/wrappers/AuthCheckWrapper';
 import { set } from 'react-hook-form';
+import { fetchPostData } from '@/lib/fetchPostData';
 
 const Component = ({
   pageType = "profile", // home, profile, friends
@@ -37,6 +38,8 @@ const Component = ({
     }
     fetchPosts();
   },  [])
+
+  console.log("posts", posts);
   return (
     <div className="flex flex-col">
       {posts && posts.map((post, i) => {
@@ -52,8 +55,8 @@ const Component = ({
             textContent={post.text_content}
             imagesProp={post.mediaList}
             likeCount={post.likeCount}
-            commentCount={0} // parse comment count
-            shareCount={post.shareCount}
+            commentCount={post.comment_count} // parse comment count
+            shareCount={post.share_count}
             hasReplies={false}
             hasButtons={true}
           />

@@ -8,7 +8,6 @@ const PostCardActionButton = forwardRef(function PostCardActionButton({
   Icon,
   callBack=() => {},
 }, ref) {
-  const [count, setCount] = useState(initialCount);
 
   // const updateCount = async () => {
   //   try { 
@@ -94,7 +93,7 @@ const PostCardActionButton = forwardRef(function PostCardActionButton({
         text-sm 
         text-white 
         ${colorVariants[color].countGroupHover} 
-      `}>{abbreviateNumber(count)}</span>
+      `}>{abbreviateNumber(initialCount)}</span>
     </Button>
   )
 
