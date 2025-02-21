@@ -5,7 +5,7 @@ export const gets3Images = async (pfpId, bannerId) => {
     params.append('paths', imagePath);
   });
   try {
-    const response = await fetch(`/api/s3?${params.toString()}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/s3?${params.toString()}`, {
       method: 'GET',
     });
     const data = await response.json();
@@ -26,7 +26,7 @@ export const fetchMediaPathByIds = async (pfpId, bannerId) => {
       return { pfpPath: null, bannerPath: null };
     }
     const query = urlParams.toString();
-    const response = await fetch(`/api/profile/media?${query}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/profile/media?${query}`, {
       method: 'GET',
     });
 

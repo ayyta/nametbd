@@ -90,6 +90,17 @@ const Replies = ({
 
   const [isLoading, setIsLoading] = useState(true);
   const [replies, setReplies] = useState([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      const replyData = await fetchReplyData(postId, selectedSort);
+
+      //console.log("replies: ", replyData);
+      setReplies(replyData);
+      setIsLoading(false);
+    }
+    fetchData();
+  }
+  , [postId, selectedSort]);
   
   // useEffect(() => {
   //   setReplies([
@@ -165,7 +176,7 @@ const Replies = ({
           <Loading/>
         </div>
       ) : (
-        replies.map((reply, index) => (
+        replies && replies.map((reply, index) => (
           <div key={index}>
             <PostCardPreview
               key={reply.postId}
