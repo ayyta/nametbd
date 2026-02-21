@@ -176,6 +176,7 @@ export default function Component({
           username={user.username}
           creationDate={post.creationDate}
           user={user}
+          setUser={setUser}
         />
         <div className="flex">
           {hasReplies && (
